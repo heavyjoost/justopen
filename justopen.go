@@ -101,8 +101,8 @@ func main() {
 
 		argv := strings.Split(cmd, " ")
 		for i := range argv {
-			if argv[i] == "%f" {
-				argv[i] = os.Args[1]
+			if strings.Contains(argv[i], "%f") {
+				argv[i] = strings.ReplaceAll(argv[i], "%f", os.Args[1])
 			}
 		}
 		bin, err := exec.LookPath(argv[0])
