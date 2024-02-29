@@ -2,13 +2,13 @@
 
 Just opens the **** location.
 
-TODO: this file for the most part :)
-
 ## Config
 Config location: `~/.config/justopen/config.yaml`
 
 Example content:
 ```yaml
+# This is false by default, which means it'll convert the path to lowercase
+casesensitive: false
 # This list gets evaluated in order
 filetypes:
   # Locations starting with http:// or https:// open with firefox

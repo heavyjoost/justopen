@@ -2,10 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/gabriel-vasile/mimetype"
-	"github.com/kkyr/fig"
-	"golang.org/x/sys/unix"
-	"golang.org/x/term"
 	"log"
 	"os"
 	"os/exec"
@@ -13,6 +9,11 @@ import (
 	"regexp"
 	"runtime/debug"
 	"strings"
+
+	"github.com/gabriel-vasile/mimetype"
+	"github.com/kkyr/fig"
+	"golang.org/x/sys/unix"
+	"golang.org/x/term"
 )
 
 func die(err error) {
@@ -36,7 +37,8 @@ type Filetype struct {
 }
 
 type Config struct {
-	Filetypes []Filetype
+	Filetypes     []Filetype
+	CaseSensitive bool
 }
 
 func main() {
@@ -51,6 +53,10 @@ func main() {
 	if len(os.Args) <= 1 {
 		die(fmt.Errorf("Gimme a file or something"))
 	}
+	target_path := os.Args[1]
+	if !cfg.CaseSensitive {
+		target_path = strings.ToLower(target_path)
+	}
 
 	var mime *mimetype.MIME = nil
 	fileinfo, _ := os.Stat(os.Args[1])
@@ -61,15 +67,15 @@ func main() {
 	}
 
 	for _, item := range cfg.Filetypes {
-		if item.Prefix != "" && !strings.HasPrefix(os.Args[1], item.Prefix) {
+		if item.Prefix != "" && !strings.HasPrefix(target_path, item.Prefix) {
 			continue
 		}
 
-		if item.Suffix != "" && !strings.HasSuffix(os.Args[1], item.Suffix) {
+		if item.Suffix != "" && !strings.HasSuffix(target_path, item.Suffix) {
 			continue
 		}
 
-		if item.Regex != nil && !item.Regex.MatchString(os.Args[1]) {
+		if item.Regex != nil && !item.Regex.MatchString(target_path) {
 			continue
 		}
 
