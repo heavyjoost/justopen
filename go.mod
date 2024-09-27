@@ -1,6 +1,8 @@
 module github.com/heavyjoost/justopen
 
-go 1.20
+go 1.21
+
+toolchain go1.21.12
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.3
